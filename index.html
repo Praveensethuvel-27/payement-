@@ -8,9 +8,10 @@
     <style>
         body { font-family: Arial; text-align: center; margin-top: 50px; background: #f4f4f4; }
         h2 { color: #333; }
-        .btn { padding: 15px 30px; margin: 10px; font-size: 18px; background: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .btn { padding: 15px 30px; margin: 10px; font-size: 18px; background: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer; }
         .btn:hover { background: #45a049; }
-        .footer { margin-top: 50px; font-size: 12px; color: #777; }
+        .info { margin-top: 30px; font-size: 14px; color: #555; }
+        code { background: #eee; padding: 2px 6px; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -19,7 +20,9 @@
     <button class="btn" onclick="pay(500)">5₹ Pay</button>
     <button class="btn" onclick="pay(1000)">10₹ Pay</button>
 
-    <div class="footer">Test Mode: Use <code>success@razorpay</code></div>
+    <div class="info">
+        <p><strong>Test Mode:</strong> Use UPI ID: <code>success@razorpay</code> | PIN: <code>123456</code></p>
+    </div>
 
     <script>
     function pay(amountInPaise) {
@@ -29,16 +32,14 @@
         }
 
         var options = {
-            "key": "rzp_test_YourRealKeyIDHere", // ← DASHBOARD LA IRUNDHU COPY PANNU
+            "key": "rzp_test_RgT7P6UHaFIu8Z", // ← Nee kudutha Test Key ID
             "amount": amountInPaise,
             "currency": "INR",
             "name": "Machan Payment",
             "description": "Test Payment - 2₹ to 10₹",
-            "image": "https://i.imgur.com/yourlogo.png", // Optional: real image podu
             "handler": function (response) {
                 alert("Payment Success! ID: " + response.razorpay_payment_id);
-                console.log(response);
-                // Backend verify ku POST pannu (optional)
+                console.log("Success:", response);
             },
             "prefill": {
                 "name": "Test User",
@@ -53,7 +54,6 @@
                     alert("Payment cancel panni da!");
                 }
             },
-            // UPI ONLY - Correct method
             "method": {
                 "upi": 1,
                 "card": 0,
