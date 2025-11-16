@@ -1,16 +1,19 @@
 const express = require('express');
 const crypto = require('crypto');
+const path = require('path');
+
 const app = express();
 
 app.use(express.json({ limit: '10mb' }));
 
 const WEBHOOK_SECRET = 'machan_secret_123';
 
-// Home route (to avoid Cannot GET /)
+// Home → index.html load agum
 app.get("/", (req, res) => {
-    res.send("Webhook Server Running Successfully 🚀");
+    res.sendFile(path.join(__dirname, "index.html"));
 });
 
+// Razorpay webhook route
 app.post('/webhook', (req, res) => {
     const signature = req.headers['x-razorpay-signature'];
     const generated_signature = crypto
@@ -39,15 +42,15 @@ app.post('/webhook', (req, res) => {
             console.log('❌ Payment Failed:', payment.id);
         }
 
-        return res.status(200).send('OK');
+        return res.status(200).send("OK");
     } else {
-        console.log('🚨 Invalid Signature - Possible Tampering!');
-        return res.status(400).send('Invalid Signature');
+        console.log("🚨 Invalid Signature!");
+        return res.status(400).send("Invalid Signature");
     }
 });
 
-// Render-friendly PORT
+// Render-friendly port
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-    console.log(`Webhook server running on port ${port}`);
+    console.log(`Server running on port ${port}`);
 });
