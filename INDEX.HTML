@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Page - 2₹ to 10₹</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        body { font-family: Arial; text-align: center; margin-top: 50px; }
+        button { padding: 15px; margin: 10px; font-size: 18px; background: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background: #45a049; }
+    </style>
+</head>
+<body>
+    <h2>Pay Pannu Da (2₹ - 10₹)</h2>
+    <button onclick="pay(200)">2₹ Pay</button>
+    <button onclick="pay(500)">5₹ Pay</button>
+    <button onclick="pay(1000)">10₹ Pay</button>
+
+    <script>
+    function pay(amountInPaise) {
+        if (amountInPaise < 200 || amountInPaise > 1000) {
+            alert("Min 2₹, Max 10₹ da machan!");
+            return;
+        }
+
+        var options = {
+            "key": "rzp_test_YOUR_KEY_ID", // Nee generate panna Key ID
+            "amount": amountInPaise, // paise la (e.g., 200 = 2₹)
+            "currency": "INR",
+            "name": "Machan Payment",
+            "description": "Test Payment",
+            "image": "https://your-logo.png", // Optional
+            "handler": function (response) {
+                alert("Payment Success! ID: " + response.razorpay_payment_id);
+                // Success ku backend la verify pannu
+            },
+            "prefill": {
+                "name": "User Name",
+                "email": "user@example.com",
+                "contact": "9999999999"
+            },
+            "theme": {
+                "color": "#3399cc"
+            },
+            "modal": {
+                "ondismiss": function() {
+                    alert("Payment Cancel panni");
+                }
+            },
+            // UPI Focus
+            "config": {
+                "display": {
+                    "preferences": {
+                        "show_default_blocks": true
+                    }
+                }
+            },
+            "options": {
+                "checkout": {
+                    "method": {
+                        "upi": 1,  // UPI enable
+                        "card": 0, // Card disable if needed
+                        "netbanking": 0,
+                        "wallet": 0
+                    }
+                }
+            }
+        };
+
+        var rzp = new Razorpay(options);
+        rzp.open();
+    }
+    </script>
+</body>
+</html>
