@@ -3,25 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pay Pannu Da - 2₹ to 10₹</title>
+    <title>Machan Pay - 2₹ to 10₹</title>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <style>
-        body { font-family: Arial; text-align: center; margin-top: 50px; background: #f4f4f4; }
-        h2 { color: #333; }
-        .btn { padding: 15px 30px; margin: 10px; font-size: 18px; background: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer; }
-        .btn:hover { background: #45a049; }
-        .info { margin-top: 30px; font-size: 14px; color: #555; }
-        code { background: #eee; padding: 2px 6px; border-radius: 4px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial; text-align: center; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 40px; }
+        .container { max-width: 500px; margin: auto; background: rgba(255,255,255,0.1); padding: 30px; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+        h1 { font-size: 28px; margin-bottom: 20px; }
+        .btn { 
+            width: 100%; padding: 16px; margin: 12px 0; font-size: 20px; font-weight: bold;
+            background: #fff; color: #333; border: none; border-radius: 12px; cursor: pointer;
+            transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+        .btn.amount-2 { background: #4CAF50; color: white; }
+        .btn.amount-5 { background: #FF9800; color: white; }
+        .btn.amount-10 { background: #F44336; color: white; }
+        .info { margin-top: 30px; font-size: 14px; opacity: 0.9; }
+        code { background: rgba(0,0,0,0.2); padding: 4px 8px; border-radius: 6px; font-family: monospace; }
+        .footer { margin-top: 50px; font-size: 12px; opacity: 0.7; }
     </style>
 </head>
 <body>
-    <h2>Pay Pannu Da (2₹ - 10₹)</h2>
-    <button class="btn" onclick="pay(200)">2₹ Pay</button>
-    <button class="btn" onclick="pay(500)">5₹ Pay</button>
-    <button class="btn" onclick="pay(1000)">10₹ Pay</button>
+    <div class="container">
+        <h1>Pay Pannu Da!</h1>
+        <p>2₹ - 10₹ Fixed | UPI Only</p>
 
-    <div class="info">
-        <p><strong>Test Mode:</strong> Use UPI ID: <code>success@razorpay</code> | PIN: <code>123456</code></p>
+        <button class="btn amount-2" onclick="pay(200)">2₹ Pay</button>
+        <button class="btn amount-5" onclick="pay(500)">5₹ Pay</button>
+        <button class="btn amount-10" onclick="pay(1000)">10₹ Pay</button>
+
+        <div class="info">
+            <p><strong>Test Mode:</strong></p>
+            <p>GPay/PhonePe → <code>success@razorpay</code> + PIN <code>123456</code></p>
+            <p><strong>QR Scan or GPay Icon Click Pannu!</strong></p>
+        </div>
+
+        <div class="footer">© Machan Payment | Test Mode</div>
     </div>
 
     <script>
@@ -32,18 +50,19 @@
         }
 
         var options = {
-            "key": "rzp_test_RgT7P6UHaFIu8Z", // ← Nee kudutha Test Key ID
+            "key": "rzp_test_RgT7P6UHaFIu8Z",  // ← Nee kudutha Test Key
             "amount": amountInPaise,
             "currency": "INR",
             "name": "Machan Payment",
-            "description": "Test Payment - 2₹ to 10₹",
+            "description": `₹${amountInPaise/100} Payment`,
+            "image": "https://i.imgur.com/7f3Xj0P.png", // Optional logo
             "handler": function (response) {
-                alert("Payment Success! ID: " + response.razorpay_payment_id);
+                alert("✅ Payment Success!\nID: " + response.razorpay_payment_id);
                 console.log("Success:", response);
             },
             "prefill": {
                 "name": "Test User",
-                "email": "test@example.com",
+                "email": "test@machan.com",
                 "contact": "9999999999"
             },
             "theme": {
@@ -51,14 +70,23 @@
             },
             "modal": {
                 "ondismiss": function() {
-                    alert("Payment cancel panni da!");
+                    alert("❌ Payment Cancel panni da!");
                 }
             },
+            // UPI ONLY + QR + GPay Intent
             "method": {
                 "upi": 1,
                 "card": 0,
                 "netbanking": 0,
                 "wallet": 0
+            },
+            "config": {
+                "display": {
+                    "language": "en",
+                    "upi": {
+                        "flow": "intent"  // ← QR + Auto GPay open
+                    }
+                }
             }
         };
 
